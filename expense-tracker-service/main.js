@@ -6,8 +6,25 @@ const port = 4000;
 
 app.use(cors());
 
+const categories = [
+  {
+    name: "Shopping",
+  }
+];
+
 app.get("/", (req, res) => {
   res.send("Hello Woooorld!");
+});
+
+app.get("/categories/list", (req, res) => {
+  res.json(categories);
+});
+
+app.get("/categories/create", (req, res) => {
+  const { name } = req.query;
+
+  categories.push({ name: name });
+  res.json(["Success"]);
 });
 
 // app.get("/", (req, res) => {

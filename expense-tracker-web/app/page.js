@@ -3,21 +3,29 @@
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [articles, setArticles] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:4000/articles")
+    fetch("http://localhost:4000/categories/list")
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        setArticles(data);
+        setCategories(data);
       });
   }, []);
 
+  const createNew = () => {
+    const name = prompt("Name...");
+    fetch(`http://localhost:4000/categories/list${name}`)
+      .then((res) => res.json())
+      .then((data) => {});
+  }
+
   return(
     <main>
-     {articles.map((item) => (
-      <div key={item.id}>{item.title}, {item.id}</div>
+      <button onClick={createNew}>Add New</button>
+     {categories.map((category) => (
+      <div key={category.name}>{category.name}</div>
      ))}
     </main>
   );
