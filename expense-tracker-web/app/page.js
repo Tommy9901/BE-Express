@@ -12,10 +12,10 @@ export default function Home() {
         console.log(data);
         setCategories(data);
       });
-  }
+  };
 
   useEffect(() => {
-   loadList();
+    loadList();
   }, []);
 
   const createNew = () => {
@@ -25,14 +25,27 @@ export default function Home() {
       .then(() => {
         loadList();
       });
-  }
+  };
 
-  return(
+  const deleteTask = () => {
+    const  id = alert("Are you sure?")
+    fetch(`http://localhost:4000/categories/delete?id=${id}`)
+      .then((res) => res.json())
+      .then(() => {
+        loadList();
+      });
+  };
+
+  return (
     <main>
       <button onClick={createNew}>Add New</button>
-     {categories.map((category) => (
-      <div key={category.name}>{category.name} <button>edit</button> <button>delete</button></div>
-     ))}
+      {categories.map((category) => (
+        <div key={category.name}>
+          {category.name}
+          <button>update</button>
+          <button onClick={deleteTask}>delete</button>
+        </div>
+      ))}
     </main>
   );
 }

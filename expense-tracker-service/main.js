@@ -8,7 +8,7 @@ const port = 4000;
 app.use(cors());
 
 const content = fs.readFileSync("categories.json", "utf-8");
-const categories = JSON.parse(content);
+let categories = JSON.parse(content);
 
 app.get("/", (req, res) => {
   res.send("Hello Woooorld!");
@@ -20,10 +20,8 @@ app.get("/categories/list", (req, res) => {
 });
 app.get("/categories/create", (req, res) => {
   const { name } = req.query;
-  categories.push({ name: name });
-
+  categories.push({ id: new Date().toISOString(),name: name });
   fs.writeFileSync("categories.json", JSON.stringify(categories));
-
   res.json(["Success"]);
 }); //end
 
@@ -31,13 +29,17 @@ app.get("/categories/create", (req, res) => {
 
 // update
 app.get("/categories/update", (req, res) => {
-  // value
+  const { id, name} = req.query;
+  const index = categories.findIndex((cat) => cat.id === id);
+  categories[index].name = name;
   res.json(["Success"]);
 });
 
 // delete
 app.get("/categories/delete", (req, res) => {
-  // value
+  const { id } = req.query;
+  categories = categories.filter((cat) => cat.id !== id);
+  fs.writeFileSync("categories.json", JSON.stringify(categories));
   res.json(["Success"]);
 });
 
