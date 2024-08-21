@@ -37,7 +37,7 @@ export default function Home() {
   };
 
   return (
-    <main>
+    <main className="container mx-auto">
       <button onClick={createNew}>Add New</button>
       {categories.map((category) => (
         <div key={category.name}>
