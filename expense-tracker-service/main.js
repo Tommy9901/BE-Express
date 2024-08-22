@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
 app.get("/categories/list", (req, res) => {
   res.json(categories);
 });
-app.get("/categories/create", (req, res) => {
+app.post("/categories/create", (req, res) => {
   const { name } = req.query;
   categories.push({ id: new Date().toISOString(),name: name });
   fs.writeFileSync("categories.json", JSON.stringify(categories));
@@ -28,7 +28,7 @@ app.get("/categories/create", (req, res) => {
 
 
 // update
-app.get("/categories/update", (req, res) => {
+app.put("/categories/update", (req, res) => {
   const { id, name} = req.query;
   const index = categories.findIndex((cat) => cat.id === id);
   categories[index].name = name;
@@ -36,7 +36,7 @@ app.get("/categories/update", (req, res) => {
 });
 
 // delete
-app.get("/categories/delete", (req, res) => {
+app.delete("/categories/delete", (req, res) => {
   const { id } = req.query;
   categories = categories.filter((cat) => cat.id !== id);
   fs.writeFileSync("categories.json", JSON.stringify(categories));

@@ -20,7 +20,10 @@ export default function Home() {
 
   const createNew = () => {
     const name = prompt("Name...");
-    fetch(`http://localhost:4000/categories/create?name=${name}`)
+    fetch(`http://localhost:4000/categories/create`, {
+      method: "POST" ,
+      body: JSON.stringify({name: name})
+    })
       .then((res) => res.json())
       .then(() => {
         loadList();
