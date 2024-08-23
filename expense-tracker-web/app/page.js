@@ -22,7 +22,10 @@ export default function Home() {
     const name = prompt("Name...");
     fetch(`http://localhost:4000/categories/create`, {
       method: "POST" ,
-      body: JSON.stringify({name: name})
+      body: JSON.stringify({name: name}),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      }
     })
       .then((res) => res.json())
       .then(() => {

@@ -6,6 +6,7 @@ const app = express();
 const port = 4000;
 
 app.use(cors());
+app.use(express.json());
 
 const content = fs.readFileSync("categories.json", "utf-8");
 let categories = JSON.parse(content);
@@ -19,7 +20,7 @@ app.get("/categories/list", (req, res) => {
   res.json(categories);
 });
 app.post("/categories/create", (req, res) => {
-  const { name } = req.query;
+  const { name } = req.body;
   categories.push({ id: new Date().toISOString(),name: name });
   fs.writeFileSync("categories.json", JSON.stringify(categories));
   res.json(["Success"]);
