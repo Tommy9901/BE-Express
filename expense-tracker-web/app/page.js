@@ -6,7 +6,7 @@ export default function Home() {
   const [categories, setCategories] = useState([]);
 
   const loadList = () => {
-    fetch("http://localhost:4000/categories/list")
+    fetch("http://localhost:4000/categories")
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -18,14 +18,15 @@ export default function Home() {
     loadList();
   }, []);
 
+  // create
   const createNew = () => {
     const name = prompt("Name...");
-    fetch(`http://localhost:4000/categories/create`, {
-      method: "POST" ,
-      body: JSON.stringify({name: name}),
+    fetch(`http://localhost:4000/categories`, {
+      method: "POST",
+      body: JSON.stringify({ name: name }),
       headers: {
-        "Content-type": "application/json; charset=UTF-8"
-      }
+        "Content-type": "application/json; charset=UTF-8",
+      },
     })
       .then((res) => res.json())
       .then(() => {
@@ -33,12 +34,15 @@ export default function Home() {
       });
   };
 
-  const deleteTask = () => {
-    const  id = alert("Are you sure?")
-    fetch(`http://localhost:4000/categories/delete?id=${id}`)
-      .then((res) => res.json())
-      .then(() => {
-        loadList();
+// delete
+  const deleteTask = (id) => {
+    fetch(`http://localhost:4000/categories/${id}`, {
+      method: "DELETE",
+    }).then((res) => {
+      if(res.status === 404){
+        alert("Category not found!")
+      }
+      loadList();
       });
   };
 
@@ -49,9 +53,13 @@ export default function Home() {
         <div key={category.name}>
           {category.name}
           <button>update</button>
-          <button onClick={deleteTask}>delete</button>
+          <button onClick={() => deleteTask(category.id)}>delete</button>
         </div>
       ))}
+      <div>
+        wrong data
+        <button onClick={() => deleteTask("wrongID")}>delete</button>
+      </div>
     </main>
   );
 }

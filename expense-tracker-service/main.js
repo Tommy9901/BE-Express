@@ -1,62 +1,58 @@
-const express = require('express');
-const cors = require('cors');
 const fs = require("fs");
+const { v4: uuidv4 } = require('uuid');
 
-const app = express();
-const port = 4000;
+const {startApp} = require("./configs/basic")
+const {createNewCategory, getCatergories, getOneCatergory, updateCatergory, deleteCatergory} = require("./services/categoryService");
 
-app.use(cors());
-app.use(express.json());
+const app = startApp();
 
-const content = fs.readFileSync("categories.json", "utf-8");
-let categories = JSON.parse(content);
-
-app.get("/", (req, res) => {
-  res.send("Hello Woooorld!");
-});
 
 // create
-app.get("/categories/list", (req, res) => {
+app.get("/categories", (req, res) => {
+  const categories = getCatergories();
   res.json(categories);
 });
-app.post("/categories/create", (req, res) => {
+
+// one category
+app.get("/categories/:id", (req, res) => {
+  const {id} = req.params;
+  const one = getOneCatergory(id);
+  res.json(one);
+});
+
+app.post("/categories", async (req, res) => {
   const { name } = req.body;
-  categories.push({ id: new Date().toISOString(),name: name });
-  fs.writeFileSync("categories.json", JSON.stringify(categories));
-  res.json(["Success"]);
+  const id = await createNewCategory({name})
+  res.status(201).json({ id });
 }); //end
 
-
-
 // update
-app.put("/categories/update", (req, res) => {
-  const { id, name} = req.query;
-  const index = categories.findIndex((cat) => cat.id === id);
-  categories[index].name = name;
-  res.json(["Success"]);
+app.put("/categories/:id", async (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+
+  if(!name){
+    res.status(400).json({message:  "Name field is required"})
+    return;
+  }
+  await updateCatergory(id, {name});
+  res.sendStatus(202);
 });
 
 // delete
-app.delete("/categories/delete", (req, res) => {
-  const { id } = req.query;
-  categories = categories.filter((cat) => cat.id !== id);
-  fs.writeFileSync("categories.json", JSON.stringify(categories));
-  res.json(["Success"]);
+app.delete("/categories/:id", async (req, res) => {
+  const { id } = req.params;
+  const deleteIndex = categories.findIndex(cat => cat.id === id);
+
+  if(deleteIndex < 0){
+    res.sendStatus(404).json({message: "Name field is required"});
+    return;
+  }
+
+  await deleteCatergory(id);
+  res.sendStatus(204);
 });
 
 
 
-
-
-app.get("/articles", (req, res) => {
-    // tootsoolol
-    res.json([
-        { id: 1, title: "Hi aaall"},
-        { id: 2, title: "What's uuuup guys"},
-        { id: 3, title: "Byee aaaaall"},
-    ]);
-  });
-
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+// transaction CRUD:
