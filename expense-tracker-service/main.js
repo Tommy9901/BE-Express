@@ -24,7 +24,7 @@ app.put("/categories/:id", updateCatergoryControl);
 // delete
 app.delete("/categories/:id", deleteCatergoryControl);
 
-app.get("/dbtest", async (req, res) => {
+app.get("/dbtefafaast", async (req, res) => {
   const result = await sql`select version()`;
   console.log(result);
   res.json({result})
