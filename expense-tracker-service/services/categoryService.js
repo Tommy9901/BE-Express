@@ -11,6 +11,7 @@ Delete:  DELETE       /categories/id
 */ 
 
 async function createNewCategory(form){
+    const categories = await getCatergories();
     const id = uuidv4();
     form.id = id;
     categories.push(form);
@@ -30,10 +31,13 @@ function updateCatergory(id, update){
     const index = categories.findIndex((cat) => cat.id === id);
     categories[index].name = name;
     fs.writeFileSync("data/categories.json", JSON.stringify(categories));
+    console.log(categories)
     return (id , update)
 }
 
-function deleteCatergory(id){}
+function deleteCatergory(id){
+    
+}
 
 module.exports = {
     createNewCategory,

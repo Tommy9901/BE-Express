@@ -8,10 +8,6 @@ app.use(cors());
 app.use(express.json());
 
 
-
-
-
-
 function startApp(){
     app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
@@ -22,5 +18,4 @@ function startApp(){
 
 module.exports = {
     startApp,
-
 };
