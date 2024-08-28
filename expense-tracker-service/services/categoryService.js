@@ -1,5 +1,6 @@
 const fs = require("fs");
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
+const { sql } = require("../configs/database");
 
 /*
 GLOBAL STANDARTS:
@@ -8,41 +9,45 @@ Creat:   POST         /categories
 Read:    GET          /categories     chooseOne: /categories/id
 Update:  PUT/PUTCH    /categories/id
 Delete:  DELETE       /categories/id
-*/ 
+*/
 
-async function createNewCategory(form){
-    const categories = await getCatergories();
-    const id = uuidv4();
-    form.id = id;
-    categories.push(form);
-    fs.writeFileSync("data/categories.json", JSON.stringify(categories));
-    return id;
-} 
-
-function getCatergories(){
-    const content = fs.readFileSync("data/categories.json", "utf-8");
-    const categories = JSON.parse(content);
-    return categories;
+async function createNewCategory(name) {
+  const id = uuidv4();
+  await sql`insert into category(id, name) values (${id}, ${name})`;
+  return id;
 }
 
-function getOneCatergory(id){}
-
-function updateCatergory(id, update){
-    const index = categories.findIndex((cat) => cat.id === id);
-    categories[index].name = name;
-    fs.writeFileSync("data/categories.json", JSON.stringify(categories));
-    console.log(categories)
-    return (id , update)
+// list
+async function getCatergories() {
+  const list = await sql`select * FROM category`;
+  return list;
 }
 
-function deleteCatergory(id){
-    
+// chooseOne
+async function getOneCatergory(id) {
+  const oneCategory = await sql`select * FROM category where id = ${id}`;
+  if(oneCategory.length){
+    return oneCategory[0];
+  }
+  return null;
 }
+
+// delete
+async function deleteCatergory(id) {
+    const result = await sql`delete FROM category where id = ${id} `;
+}
+
+// update
+async function updateCatergory(id, update) {
+    const result = await sql`update category set name = ${update.name} where id = ${id}`;
+    console.log({result}) 
+}
+
 
 module.exports = {
-    createNewCategory,
-    getCatergories,
-    getOneCatergory,
-    updateCatergory,
-    deleteCatergory,
-}
+  createNewCategory,
+  getCatergories,
+  getOneCatergory,
+  updateCatergory,
+  deleteCatergory,
+};

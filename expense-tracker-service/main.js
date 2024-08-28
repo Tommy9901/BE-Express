@@ -24,8 +24,3 @@ app.put("/categories/:id", updateCatergoryControl);
 // delete
 app.delete("/categories/:id", deleteCatergoryControl);
 
-app.get("/dbtefast", async (req, res) => {
-  const result = await sql`select version()`;
-  console.log(result);
-  res.json({result})
-})
