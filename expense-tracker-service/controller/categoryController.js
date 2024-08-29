@@ -15,18 +15,17 @@ const getCategoriesControl = async (req, res) => {
 const getOneCatergoryControl = async (req, res) => {
   const { id } = req.params;
   const chooseOne = await getOneCatergory(id);
-  if(!chooseOne){
-    res.status(404).json({message: "Not found"})
+  if (!chooseOne) { 
+    res.status(404).json({ message: "Not found" });
     return;
   }
   res.status(201).json(chooseOne);
 };
 
-
 // create
 const createNewCategoryControl = async (req, res) => {
-  const { name } = req.body;
-  const id = await createNewCategory(name);
+  const { name, icon, color } = req.body;
+  const id = await createNewCategory(name, icon, color);
   res.status(201).json({ id });
 };
 
@@ -40,12 +39,10 @@ const deleteCatergoryControl = async (req, res) => {
 // update
 const updateCatergoryControl = async (req, res) => {
   const { id } = req.params;
-  const input = req.body;
-  await updateCatergory( id, input);
-  res.sendStatus(204);
+  const {name, icon, color} = req.body;
+  await updateCatergory(id, {name, icon, color});
+  res.status(201).json("done...");
 };
-
-
 
 module.exports = {
   getCategoriesControl,
