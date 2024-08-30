@@ -42,9 +42,11 @@ import {
   Snail,
   Turtle,
   Check,
+  X,
 } from "lucide-react";
 
 import { useEffect, useState } from "react";
+import { Nav } from "@/components/Navigation/Nav";
 
 const categoryIcon = [
   { name: "house", Icon: House },
@@ -107,7 +109,7 @@ export default function Home() {
     const name = prompt("Name...");
     fetch(`http://localhost:4000/categories`, {
       method: "POST",
-      body: JSON.stringify({ name: name }),
+      body: JSON.stringify({ name: name , color: color, icon: icon}),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
       },
@@ -140,74 +142,84 @@ export default function Home() {
       loadList();
     });
   };
-  console.log({ color });
+  console.log({ color, icon});
+  
 
   return (
-    <main className="container mx-auto">
-      <Button variant="secondary" onClick={() => setOpen(true)}>
-        Adddd
-      </Button>
+    <main className="container mx-auto max-w-[1440px]">
+      <div className="px-[120px]">
 
-      <Dialog open={open}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Add Category</DialogTitle>
-          </DialogHeader>
-          <hr />
-          <div className="flex gap-2">
-            <Popover>
-              <PopoverTrigger>
-                <Button variant="secondary">
-                  <House />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="flex flex-col gap-6">
-                <div className="grid grid-cols-6 gap-6 px-6">
-                  {categoryIcon.map(({ name, Icon }) => (
-                    <div key={name}>
-                      <Icon />
-                    </div>
-                  ))}
-                </div>
-                <hr />
-                <div className="grid grid-cols-7 gap-x-4">
-                  {categoryColor.map(({ name, value }) => (
-                    <div
-                      onClick={() => setColor(name)}
-                      key={name}
-                      className="w-8 h-8 rounded-full"
-                      style={{ backgroundColor: value }}
-                    >
-                      {color === name && <Check />}
-                    </div>
-                  ))}
-                </div>
-              </PopoverContent>
-            </Popover>
+        <Nav />
 
-            <Input
-              id="name"
-              defaultValue="Pedro Duarte"
-              className="col-span-3"
-            />
+        <Button variant="secondary" onClick={() => setOpen(true)}>
+          Adddd
+        </Button>
+
+        <Dialog open={open}>
+          <DialogContent className="sm:max-w-[425px] rounded-lg">
+            <DialogHeader>
+              <div className="flex justify-between">
+                <DialogTitle>Add Category</DialogTitle>
+                <X onClick={() => setOpen(false)} className="w-5 h-5"/>
+              </div>
+              <DialogDescription></DialogDescription>
+            </DialogHeader>
+            <hr />
+            <div className="flex gap-2">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="secondary">
+                    <House />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="flex flex-col gap-6">
+                  <div className="grid grid-cols-6 gap-6 px-6">
+                    {categoryIcon.map(({ name, Icon }) => (
+                      <div onClick={() => setIcon(name)} key={name}> 
+                        <Icon />
+                      </div>
+                    ))}
+                  </div>
+                  <hr />
+                  <div className="grid grid-cols-7 gap-x-4">
+                    {categoryColor.map(({ name, value }) => (
+                      <div
+                        onClick={() => setColor(name)} key={name}
+                        className="w-8 h-8 rounded-full text-white flex items-center justify-center"
+                        style={{ backgroundColor: value }}
+                      >
+                        {color === name && <Check  className="w-4 h-4"/>}
+                      </div>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
+
+              <Input
+                id="name"
+                defaultValue="Name"
+                className="col-span-3 text-slate-400"
+              />
+            </div>
+            
+            <DialogFooter>
+              <Button className="w-full rounded-full">Save changes</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        <button className="w-full" onClick={createNew}>
+          Add New
+        </button>
+
+        {categories.map((category) => (
+          <div key={category.name}>
+            {category.name}
+            <button onClick={() => deleteTask(category.id)}>delete</button>
+            <button onClick={updateTask}>edit</button>
           </div>
-          <Button onClick={() => setOpen(false)}>close</Button>
-          <DialogFooter>
-            <Button className="w-full rounded-full">Save changes</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-      <button className="w-full" onClick={createNew}>
-        Add New
-      </button>
-
-      {categories.map((category) => (
-        <div key={category.name}>
-          {category.name}
-          <button onClick={() => deleteTask(category.id)}>delete</button>
-          <button onClick={updateTask}>edit</button>
-        </div>
-      ))}
+        ))}
+      </div>
     </main>
   );
 }

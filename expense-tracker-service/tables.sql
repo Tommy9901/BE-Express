@@ -5,13 +5,12 @@ CREATE TABLE category(
 )
 
 CREATE TABLE transaction(
-  amount decimal(10,2),
-  categoryID char(36),
-  type varchar(10),
+  amount DECIMAL(10,2),
+  categoryID CHAR(36),
+  type VARCHAR(10),
   date Date,
-  payee varchar(),
+  payee VARCHAR(30),
   note TEXT
-  
 )
 
 
