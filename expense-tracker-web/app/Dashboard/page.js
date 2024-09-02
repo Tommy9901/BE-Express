@@ -1,6 +1,11 @@
+
+
 export const Dash = () => {
     return(
-        <div>aaaa</div>
+        <main className="max-w-[1440px] px-[120px]">       
+        aaaa
+           
+        </main>
     );
 }
 

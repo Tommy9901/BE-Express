@@ -16,80 +16,21 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import {
-  Angry,
-  Annoyed,
-  Aperture,
-  Atom,
-  Award,
-  Axe,
-  BadgeDollarSign,
-  Bell,
-  Bird,
-  Bluetooth,
-  BookHeart,
-  BusFront,
-  Candy,
-  Cat,
-  Contact,
-  Dog,
-  FishOff,
-  House,
-  HousePlus,
-  LockKeyholeOpen,
-  PawPrint,
-  Rabbit,
-  Snail,
-  Turtle,
-  Check,
-  X,
-} from "lucide-react";
+import { House, Check, X } from "lucide-react";
 
 import { useEffect, useState } from "react";
-import { Nav } from "@/components/Navigation/Nav";
-
-const categoryIcon = [
-  { name: "house", Icon: House },
-  { name: "housePlus", Icon: HousePlus },
-  { name: "contact", Icon: Contact },
-  { name: "atom", Icon: Atom },
-  { name: "badgeDollarSign", Icon: BadgeDollarSign },
-  { name: "axe", Icon: Axe },
-  { name: "bell", Icon: Bell },
-  { name: "award", Icon: Award },
-  { name: "aperture", Icon: Aperture },
-  { name: "angry", Icon: Angry },
-  { name: "annoyed", Icon: Annoyed },
-  { name: "bluetooth", Icon: Bluetooth },
-  { name: "bookHeart", Icon: BookHeart },
-  { name: "busFront", Icon: BusFront },
-  { name: "candy", Icon: Candy },
-  { name: "cat", Icon: Cat },
-  { name: "dog", Icon: Dog },
-  { name: "fishOff", Icon: FishOff },
-  { name: "rabbit", Icon: Rabbit },
-  { name: "snail", Icon: Snail },
-  { name: "turtle", Icon: Turtle },
-  { name: "bird", Icon: Bird },
-  { name: "pawPrint", Icon: PawPrint },
-  { name: "lockKeyholeOpen", Icon: LockKeyholeOpen },
-];
-
-const categoryColor = [
-  { name: "blue", value: "#0166FF" },
-  { name: "sky", value: "#01B3FF" },
-  { name: "green", value: "#41CC00" },
-  { name: "yellow", value: "#F9D100" },
-  { name: "orange", value: "#FF7B01" },
-  { name: "pink", value: "#AE01FF" },
-  { name: "red", value: "#FF0101" },
-];
+import { categoryColors, categoryIcons } from "@/components/data";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 export default function Home() {
   const [categories, setCategories] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [icon, setIcon] = useState("");
-  const [color, setColor] = useState("");
+  const [open, setOpen] = useState(false);  
+  const [icon, setIcon] = useState("house");
+  const [name, setName] = useState("");
+  const [color, setColor] = useState("blue");
+  const [loading, setLoading] = useState(false);
+  const [editingCategory, setEditingCategory] = useState();
 
   const loadList = () => {
     fetch("http://localhost:4000/categories")
@@ -106,17 +47,40 @@ export default function Home() {
 
   // create
   const createNew = () => {
-    const name = prompt("Name...");
+    setLoading(true);
+
+    // const {name, icon, color} = prompt("Name...");
     fetch(`http://localhost:4000/categories`, {
       method: "POST",
-      body: JSON.stringify({ name: name , color: color, icon: icon}),
+      body: JSON.stringify({ name: name, color: color, icon: icon }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
       },
     })
-      .then((res) => res.json())
       .then(() => {
         loadList();
+        setLoading(false);
+        toast("Successfully created.");
+      });
+  };
+
+  // update
+  const updateCategory = () => {
+    setLoading(true);
+
+    // const {name, icon, color} = prompt("Name...");
+    fetch(`http://localhost:4000/categories/${editingCategory.id}`, {
+      method: "PUT",
+      body: JSON.stringify({ name: name, color: color, icon: icon }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then(() => {
+        loadList();
+        setLoading(false);
+        closeDialog
+        toast("Successfully updated.");
       });
   };
 
@@ -132,94 +96,134 @@ export default function Home() {
     });
   };
 
-  const updateTask = (id) => {
-    fetch(`http://localhost:4000/categories/${id}, ${update}`, {
-      method: "PUT",
-    }).then((res) => {
-      if (res.status === 404) {
-        alert("Category not found!");
-      }
-      loadList();
-    });
-  };
-  console.log({ color, icon});
-  
+  const reset = () => {
+    setName("");
+    setColor("blue");
+    setIcon("house")
+    setEditingCategory(null)
+  }
+
+  const closeDialog = () => {
+    reset();
+    setOpen(false)
+  }
+
+  useEffect(() => {
+    if (editingCategory) {
+      setOpen(true);
+      setName(editingCategory.name);
+      setIcon(editingCategory.icon);
+      setColor(editingCategory.color);
+    }
+  }, [editingCategory]);
 
   return (
-    <main className="container mx-auto max-w-[1440px]">
-      <div className="px-[120px]">
+    <main className="container mx-auto ">
+      <Toaster />
+      <Button variant="secondary" onClick={() => {reset(); setOpen(true)}}>
+        Adddd
+      </Button>
 
-        <Nav />
-
-        <Button variant="secondary" onClick={() => setOpen(true)}>
-          Adddd
-        </Button>
-
-        <Dialog open={open}>
-          <DialogContent className="sm:max-w-[425px] rounded-lg">
-            <DialogHeader>
-              <div className="flex justify-between">
-                <DialogTitle>Add Category</DialogTitle>
-                <X onClick={() => setOpen(false)} className="w-5 h-5"/>
-              </div>
-              <DialogDescription></DialogDescription>
-            </DialogHeader>
-            <hr />
-            <div className="flex gap-2">
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="secondary">
-                    <House />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="flex flex-col gap-6">
-                  <div className="grid grid-cols-6 gap-6 px-6">
-                    {categoryIcon.map(({ name, Icon }) => (
-                      <div onClick={() => setIcon(name)} key={name}> 
-                        <Icon />
-                      </div>
-                    ))}
-                  </div>
-                  <hr />
-                  <div className="grid grid-cols-7 gap-x-4">
-                    {categoryColor.map(({ name, value }) => (
-                      <div
-                        onClick={() => setColor(name)} key={name}
-                        className="w-8 h-8 rounded-full text-white flex items-center justify-center"
-                        style={{ backgroundColor: value }}
-                      >
-                        {color === name && <Check  className="w-4 h-4"/>}
-                      </div>
-                    ))}
-                  </div>
-                </PopoverContent>
-              </Popover>
-
-              <Input
-                id="name"
-                defaultValue="Name"
-                className="col-span-3 text-slate-400"
-              />
+      <Dialog open={open}>
+        <DialogContent className="sm:max-w-[425px] rounded-lg">
+          <DialogHeader>
+            <div className="flex justify-between">
+              <DialogTitle>Add Category</DialogTitle>
+              <X onClick={closeDialog} className="w-5 h-5" />
             </div>
-            
-            <DialogFooter>
-              <Button className="w-full rounded-full">Save changes</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+            <DialogDescription></DialogDescription>
+          </DialogHeader>
+          <hr />
+          <div className="flex gap-2">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="secondary">
+                  <CategoryIcon IconName={icon} color={color}/>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="flex flex-col gap-6">
+                <div className="grid grid-cols-6 gap-6 px-6">
+                  {categoryIcons.map(({ name, Icon }) => (
+                    <div
+                      onClick={() => setIcon(name)}
+                      key={name}
+                      className={`grid items-center justify-center px-4 py-1 rounded-lg ${
+                        icon === name ? "bg-slate-300" : ""
+                      }`}
+                    >
+                      <Icon />
+                    </div>
+                  ))}
+                </div>
+                <hr />
+                <div className="grid grid-cols-7 gap-x-4">
+                  {categoryColors.map(({ name, value }) => (
+                    <div
+                      onClick={() => setColor(name)}
+                      key={name}
+                      className="w-8 h-8 rounded-full text-white flex items-center justify-center "
+                      style={{ backgroundColor: value }}
+                    >
+                      {color === name && <Check className="w-4 h-4" />}
+                    </div>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
 
-        <button className="w-full" onClick={createNew}>
-          Add New
-        </button>
-
-        {categories.map((category) => (
-          <div key={category.name}>
-            {category.name}
-            <button onClick={() => deleteTask(category.id)}>delete</button>
-            <button onClick={updateTask}>edit</button>
+            <Input
+              disabled={loading}
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="col-span-3 text-slate-400"
+            />
           </div>
-        ))}
-      </div>
+
+          <DialogFooter>
+            {editingCategory ? (
+              <Button disabled={loading} onClick={updateCategory} className="w-full rounded-full">Update</Button>
+            ) : (
+              <Button disabled={loading} onClick={createNew} className="w-full rounded-full">Save changes</Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* <button className="w-full" onClick={createNew}>
+        Add New
+      </button> */}
+
+      {categories.map((category) => (
+        <div key={category.name} className="flex gap-4">
+          <CategoryIcon IconName={category.icon} color={category.color} />
+          {category.name}
+          <button onClick={() => deleteTask(category.id)}>delete</button>
+          <button onClick={() => setEditingCategory(category)}>edit</button>
+        </div>
+      ))}
     </main>
   );
 }
+
+const CategoryIcon = ({ IconName, color }) => {
+  // console.log({name})
+  const iconObject = categoryIcons.find((item) => item.name === IconName);
+  const colorObject = categoryColors.find((item) => item.name === color);
+  // console.log({iconObject})
+
+  if (!iconObject) {
+    return <House />;
+  }
+
+  let hexColor;
+  if (!colorObject) {
+    hexColor = "#0000";
+  } else {
+    hexColor = colorObject.value;
+  }
+
+  const { Icon } = iconObject;
+
+  return <Icon style={{ color: hexColor }} />;
+};
