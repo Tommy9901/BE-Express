@@ -1,130 +1,131 @@
 "use client";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { House, Check, X } from "lucide-react";
+// import {
+//   Popover,
+//   PopoverContent,
+//   PopoverTrigger,
+// } from "@/components/ui/popover";
 
-import { useEffect, useState } from "react";
-import { categoryColors, categoryIcons } from "@/components/data";
-import { Toaster } from "@/components/ui/sonner";
-import { toast } from "sonner";
+// import { Button } from "@/components/ui/button";
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogDescription,
+//   DialogFooter,
+//   DialogHeader,
+//   DialogTitle,
+//   DialogTrigger,
+// } from "@/components/ui/dialog";
+// import { Input } from "@/components/ui/input";
+// import { House, Check, X } from "lucide-react";
+
+// import { useEffect, useState } from "react";
+// import { categoryColors, categoryIcons } from "@/components/data";
+// import { Toaster } from "@/components/ui/sonner";
+// import { toast } from "sonner";
 
 export default function Home() {
-  const [categories, setCategories] = useState([]);
-  const [open, setOpen] = useState(false);  
-  const [icon, setIcon] = useState("house");
-  const [name, setName] = useState("");
-  const [color, setColor] = useState("blue");
-  const [loading, setLoading] = useState(false);
-  const [editingCategory, setEditingCategory] = useState();
+  // const [categories, setCategories] = useState([]);
+  // const [open, setOpen] = useState(false);  
+  // const [icon, setIcon] = useState("house");
+  // const [name, setName] = useState("");
+  // const [color, setColor] = useState("blue");
+  // const [loading, setLoading] = useState(false);
+  // const [editingCategory, setEditingCategory] = useState();
 
-  const loadList = () => {
-    fetch("http://localhost:4000/categories")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        setCategories(data);
-      });
-  };
+  // const loadList = () => {
+  //   fetch("http://localhost:4000/categories")
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       console.log(data);
+  //       setCategories(data);
+  //     });
+  // };
 
-  useEffect(() => {
-    loadList();
-  }, []);
+  // useEffect(() => {
+  //   loadList();
+  // }, []);
 
-  // create
-  const createNew = () => {
-    setLoading(true);
+  // // create
+  // const createNew = () => {
+  //   setLoading(true);
 
-    // const {name, icon, color} = prompt("Name...");
-    fetch(`http://localhost:4000/categories`, {
-      method: "POST",
-      body: JSON.stringify({ name: name, color: color, icon: icon }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then(() => {
-        loadList();
-        setLoading(false);
-        toast("Successfully created.");
-      });
-  };
+  //   // const {name, icon, color} = prompt("Name...");
+  //   fetch(`http://localhost:4000/categories`, {
+  //     method: "POST",
+  //     body: JSON.stringify({ name: name, color: color, icon: icon }),
+  //     headers: {
+  //       "Content-type": "application/json; charset=UTF-8",
+  //     },
+  //   })
+  //     .then(() => {
+  //       loadList();
+  //       setLoading(false);
+  //       toast("Successfully created.");
+  //     });
+  // };
 
-  // update
-  const updateCategory = () => {
-    setLoading(true);
+  // // update
+  // const updateCategory = () => {
+  //   setLoading(true);
 
-    // const {name, icon, color} = prompt("Name...");
-    fetch(`http://localhost:4000/categories/${editingCategory.id}`, {
-      method: "PUT",
-      body: JSON.stringify({ name: name, color: color, icon: icon }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then(() => {
-        loadList();
-        setLoading(false);
-        closeDialog
-        toast("Successfully updated.");
-      });
-  };
+  //   // const {name, icon, color} = prompt("Name...");
+  //   fetch(`http://localhost:4000/categories/${editingCategory.id}`, {
+  //     method: "PUT",
+  //     body: JSON.stringify({ name: name, color: color, icon: icon }),
+  //     headers: {
+  //       "Content-type": "application/json; charset=UTF-8",
+  //     },
+  //   })
+  //     .then(() => {
+  //       loadList();
+  //       setLoading(false);
+  //       closeDialog
+  //       toast("Successfully updated.");
+  //     });
+  // };
 
-  // delete
-  const deleteTask = (id) => {
-    fetch(`http://localhost:4000/categories/${id}`, {
-      method: "DELETE",
-    }).then((res) => {
-      if (res.status === 404) {
-        alert("Category not found!");
-      }
-      loadList();
-    });
-  };
+  // // delete
+  // const deleteTask = (id) => {
+  //   fetch(`http://localhost:4000/categories/${id}`, {
+  //     method: "DELETE",
+  //   }).then((res) => {
+  //     if (res.status === 404) {
+  //       alert("Category not found!");
+  //     }
+  //     loadList();
+  //   });
+  // };
 
-  const reset = () => {
-    setName("");
-    setColor("blue");
-    setIcon("house")
-    setEditingCategory(null)
-  }
+  // const reset = () => {
+  //   setName("");
+  //   setColor("blue");
+  //   setIcon("house")
+  //   setEditingCategory(null)
+  // }
 
-  const closeDialog = () => {
-    reset();
-    setOpen(false)
-  }
+  // const closeDialog = () => {
+  //   reset();
+  //   setOpen(false)
+  // }
 
-  useEffect(() => {
-    if (editingCategory) {
-      setOpen(true);
-      setName(editingCategory.name);
-      setIcon(editingCategory.icon);
-      setColor(editingCategory.color);
-    }
-  }, [editingCategory]);
+  // useEffect(() => {
+  //   if (editingCategory) {
+  //     setOpen(true);
+  //     setName(editingCategory.name);
+  //     setIcon(editingCategory.icon);
+  //     setColor(editingCategory.color);
+  //   }
+  // }, [editingCategory]);
 
   return (
     <main className="container mx-auto ">
-      <Toaster />
+      {/* <Toaster />
       <Button variant="secondary" onClick={() => {reset(); setOpen(true)}}>
         Adddd
-      </Button>
+      </Button> */}
 
-      <Dialog open={open}>
+      {/* <Dialog open={open}>
         <DialogContent className="sm:max-w-[425px] rounded-lg">
           <DialogHeader>
             <div className="flex justify-between">
@@ -188,42 +189,41 @@ export default function Home() {
             )}
           </DialogFooter>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
 
       {/* <button className="w-full" onClick={createNew}>
         Add New
       </button> */}
 
-      {categories.map((category) => (
+      {/* {categories.map((category) => (
         <div key={category.name} className="flex gap-4">
           <CategoryIcon IconName={category.icon} color={category.color} />
           {category.name}
           <button onClick={() => deleteTask(category.id)}>delete</button>
           <button onClick={() => setEditingCategory(category)}>edit</button>
         </div>
-      ))}
+      ))} */}
+      aaaaaa
     </main>
   );
 }
 
-const CategoryIcon = ({ IconName, color }) => {
-  // console.log({name})
-  const iconObject = categoryIcons.find((item) => item.name === IconName);
-  const colorObject = categoryColors.find((item) => item.name === color);
-  // console.log({iconObject})
+// const CategoryIcon = ({ IconName, color }) => {
+//   // console.log({name})
+//   const iconObject = categoryIcons.find((item) => item.name === IconName);
+//   const colorObject = categoryColors.find((item) => item.name === color);
+//   // console.log({iconObject})
 
-  if (!iconObject) {
-    return <House />;
-  }
+//   if (!iconObject) {
+//     return <House />;
+//   }
 
-  let hexColor;
-  if (!colorObject) {
-    hexColor = "#0000";
-  } else {
-    hexColor = colorObject.value;
-  }
-
-  const { Icon } = iconObject;
-
-  return <Icon style={{ color: hexColor }} />;
-};
+//   let hexColor;
+//   if (!colorObject) {
+//     hexColor = "#0000";
+//   } else {
+//     hexColor = colorObject.value;
+//   }
+//   const { Icon } = iconObject;
+//   return <Icon style={{ color: hexColor }} />;
+// };

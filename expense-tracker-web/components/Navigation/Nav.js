@@ -7,7 +7,9 @@ export const Nav = () => {
         <main className="flex justify-between py-4 mb-6">
             <div className="flex items-center gap-6">
                 <div className="flex">
-                    <img src="/header/logo.png" alt="logo" />
+                    <a href="/">
+                        <img src="/header/logo.png" alt="logo" />
+                    </a>
                 </div>
                 <Link href={"/Dashboard"}>Dashboard</Link>
                 <Link href={"/Records"}>Records</Link>

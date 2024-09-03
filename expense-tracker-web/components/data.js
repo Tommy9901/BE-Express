@@ -61,3 +61,25 @@ export const categoryColors = [
     { name: "pink", value: "#AE01FF" },
     { name: "red", value: "#FF0101" },
 ];
+
+export const CategoryIcon = ({ IconName, color }) => {
+    // console.log({name})
+    const iconObject = categoryIcons.find((item) => item.name === IconName);
+    const colorObject = categoryColors.find((item) => item.name === color);
+    // console.log({iconObject})
+  
+    if (!iconObject) {
+      return <House />;
+    }
+  
+    let hexColor;
+    if (!colorObject) {
+      hexColor = "#0000";
+    } else {
+      hexColor = colorObject.value;
+    }
+    const { Icon } = iconObject;
+    return <Icon style={{ color: hexColor }} />;
+};
+
+export default CategoryIcon;

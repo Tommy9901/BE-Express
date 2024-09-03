@@ -4,15 +4,29 @@ CREATE TABLE category(
   name TEXT NOT NULL,
 )
 
+CREATE TYPE transactionType AS ENUM ('INCOME', 'EXPENSE');
 CREATE TABLE transaction(
+  id char(36) PRIMARY KEY,
   amount DECIMAL(10,2),
   categoryID CHAR(36),
-  type VARCHAR(10),
+  type transactionType,
   date Date,
-  payee VARCHAR(30),
-  note TEXT
+  payee VARCHAR(36),
+  note TEXT,
+  FOREIGN KEY (categoryID) REFERENCES category(id)
 )
+-- INSERT into transaction values(....., ...., ..., ..., )
 
+-- delete table
+DROP TABLE transaction;
+-- 
+
+
+
+--left join
+SELECT transaction.amount, transaction.type, category.name, category.icon 
+FROM transaction LEFT JOIN category 
+on transaction.categoryID = category.id
 
 SELECT id, name FROM category;
 SELECT * FROM category;
