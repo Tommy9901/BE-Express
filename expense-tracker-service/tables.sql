@@ -17,13 +17,13 @@ CREATE TABLE transaction(
 )
 -- INSERT into transaction values(....., ...., ..., ..., )
 
--- delete table
+-- delete tableeee
 DROP TABLE transaction;
 -- 
 
 
 
---left join
+--left joinnnnn
 SELECT transaction.amount, transaction.type, category.name, category.icon 
 FROM transaction LEFT JOIN category 
 on transaction.categoryID = category.id
