@@ -1,4 +1,7 @@
 "use client";
+import { useRouter } from "next/navigation";
+
+
 import { Checkbox } from "@/components/ui/checkbox";
 // import * as React from "react"
 // import { CalendarIcon } from "@radix-ui/react-icons"
@@ -26,12 +29,17 @@ import { Input } from "@/components/ui/input";
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useEffect, useState } from "react";
-import CategoryDialog from "@/components/CategoryData/CategoryDialog";
+import CategoryDialog from "@/components/Dialogs/CategoryDialog";
+import RecordDialog from "@/components/Dialogs/RecordDialog";
 
 export const Record = () => {
   const [categories, setCategories] = useState([]);
   const [open, setOpen] = useState(false);
+  const [recordOpen, setRecordOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState();
+//   const [loading, setLoading] = useState(false);
+
+    const router = useRouter();
 
   const loadList = () => {
     fetch("http://localhost:4000/categories")
@@ -58,10 +66,12 @@ export const Record = () => {
     });
   };
 
-  console.log({ open });
+//   console.log({ open });
 
   return (
     <main className="flex gap-6 ">
+        <RecordDialog hideDialog={() => setOpen(false)}/>
+
       <Toaster />
       <CategoryDialog
         open={open}
@@ -72,12 +82,13 @@ export const Record = () => {
       />
 
 
-      <div className="flex flex-col gap-6 my-6 mx-4 max-w-[282px]">
+        <div className="flex flex-col gap-6 my-6 mx-4 max-w-[282px]">
             <div>
                 <div className="text-2xl font-semibold mb-6  ">Records</div>
                 <Button
                     variant="secondary"
                     className="px-[98.5px] py-1 bg-[#0166FF] rounded-full text-white"
+                    onClick={() => router.push(`?create=new`)}
                 >
                     <Plus />
                     <span className="ml-2">Add</span>
@@ -152,7 +163,7 @@ export const Record = () => {
                     </div>
                 </div>
             </div>
-      </div>
+        </div>
 
       {/* body */}
 
