@@ -122,18 +122,22 @@ export const Record = () => {
 
                 <div className="flex flex-col gap-2">
                     {categories.map((category) => (
-                    <div key={category.name} className="flex gap-1">
-                        <CategoryIcon IconName={category.icon} color={category.color} />
-                        {category.name}
-                        <Button onClick={() => deleteTask(category.id)}>delete</Button>
-                        <Button
-                        onClick={() => {
-                            setEditingCategory(category);
-                            setOpen(true);
-                        }}
-                        >
-                        edit
-                        </Button>
+                    <div key={category.name} className="flex justify-between">
+                        <div className="flex gap-2">
+                            <CategoryIcon IconName={category.icon} color={category.color} />
+                            {category.name}
+                        </div>
+                        <div className="flex gap-1">
+                            <Button onClick={() => deleteTask(category.id)}>delete</Button>
+                            <Button
+                            onClick={() => {
+                                setEditingCategory(category);
+                                setOpen(true);
+                            }}
+                            >
+                            edit
+                            </Button>
+                        </div>
                     </div>
                     ))}
                     <Button
