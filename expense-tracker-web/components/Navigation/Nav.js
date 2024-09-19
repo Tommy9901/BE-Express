@@ -15,8 +15,8 @@ export const Nav = () => {
                         <img src="/header/logo.png" alt="logo" />
                     </a>
                 </div>
-                <Link href={"/Dashboard"}>Dashboard</Link>
-                <Link href={"/Records"}>Records</Link>
+                <Link href={"/Dashboard"}>Dashboardd</Link>
+                <Link href={"/Records"}>Recordss</Link>
             </div>
             <div className="flex gap-6 items-center text-white">
                 <button 
